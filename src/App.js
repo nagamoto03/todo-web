@@ -1,16 +1,34 @@
 /** @format */
 
-import { Box, Center, CheckboxGroup, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  Box,
+  Button,
+  Center,
+  CheckboxGroup,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 import Task from "./component/Task";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
+  const [name, setName] = useState("");
 
   const fetch = async () => {
     const res = await axios.get("http://localhost:3010/tasks");
     setTasks(res.data);
+  };
+
+  const createTask = async () => {
+    await axios.post("http://localhost:3010/tasks", {
+      name: name,
+      is_done: false,
+    });
+    setName("");
+    fetch();
   };
 
   useEffect(() => {
@@ -33,6 +51,18 @@ const App = () => {
               <h1>タスク一覧</h1>
             </Text>
           </Box>
+          <Flex mb="24px">
+            <Input
+              placeholder="タスク名を入力"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <Box ml="16px">
+              <Button colorScheme="teal" onClick={createTask}>
+                タスクを作成
+              </Button>
+            </Box>
+          </Flex>
           <CheckboxGroup>
             {tasks.map((task, index) => {
               return (
