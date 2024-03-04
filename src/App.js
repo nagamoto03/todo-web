@@ -31,6 +31,11 @@ const App = () => {
     fetch();
   };
 
+  const destroyTask = async (id) => {
+    await axios.delete(`http://localhost:3010/tasks/${id}`);
+    fetch();
+  };
+
   useEffect(() => {
     fetch();
   }, []);
@@ -67,11 +72,13 @@ const App = () => {
             {tasks.map((task, index) => {
               return (
                 <Task
+                  id={task.id}
                   key={index}
                   index={index}
                   name={task.name}
                   isDone={task.isDone}
                   toggleIsDone={toggleIsDone}
+                  destroyTask={destroyTask}
                 />
               );
             })}
